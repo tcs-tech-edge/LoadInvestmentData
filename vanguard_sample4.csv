@@ -1,4 +1,4 @@
-accountName,accountId,customerId,ticker,type,purchase_price,purchase_date
+accountName,accountId,customerId,ticker,type,purchase_price,units,purchase_date
 Vanguard,123456,dzamero2,VGT,401K,220.00,10,10/10/2019
 Vanguard,123456,dzamero2,AAPL,401K,230.00,10,10/10/2019
 Vanguard,123456,dzamero2,GOOG,401K,1200.00,10,10/10/2019
