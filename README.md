@@ -8,7 +8,7 @@
 4. [ ] Create S3 Lambda trigger
 5. [ ] Create s3 bucket policy with this role arn
 
-```javascript
+```json
 {
     "Version": "2012-10-17",
     "Id": "Policy",
@@ -32,7 +32,7 @@
 * [ ] Test the lambda function
 
 
-```javascript
+```json
 {
   "Records": [
     {
