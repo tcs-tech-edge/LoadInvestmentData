@@ -1,11 +1,14 @@
-# LoadInvestmentData
+# Data Load into DynamoDB
 
-1 - Create a s3 bucket (non public)
-2 - Create a lambda function
-3 - Assign a role that have access to dynamodb and s3
-4 - Create S3 Lambda trigger
-5 - Create s3 bucket policy with this role arn
+## Steps to Load Data using Lambda Function & S3
 
+1. [ ] Create a s3 bucket
+2. [ ] Create a lambda function
+3. [ ] Assign a role that have access to dynamodb and s3
+4. [ ] Create S3 Lambda trigger
+5. [ ] Create s3 bucket policy with this role arn
+
+```javascript
 {
     "Version": "2012-10-17",
     "Id": "Policy",
@@ -24,10 +27,12 @@
         }
     ]
 }
+```
 
-6 - Test the lambda function
+* [ ] Test the lambda function
 
 
+```javascript
 {
   "Records": [
     {
@@ -65,4 +70,8 @@
     }
   ]
 }
+```
+
+
+
 
