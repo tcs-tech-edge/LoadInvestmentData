@@ -8,6 +8,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from botocore.exceptions import ClientError
 from datetime import datetime as dt
 from dateutil import parser
+from decimal import Decimal
 
 print('Loading function')
 
@@ -27,7 +28,7 @@ def lambda_handler(event, context):
         for i in ipResponseAll['Items']:
             if(i["customerID"] not in uniqueCustomers):
                  uniqueCustomers.append(i["customerID"] );
-        
+     
         for customerID in uniqueCustomers:
             ipResponse = investmentPortfolioTable.scan(FilterExpression=Attr("customerID").eq(customerID))
             nwDict = {}
@@ -39,19 +40,27 @@ def lambda_handler(event, context):
                         i['sale_date'] = '12/12/2100'
                     if (parser.parse(i['purchase_date']) < parser.parse(t['tickerDate'])) & (parser.parse(i['sale_date']) > parser.parse(t['tickerDate'])):
                         if t['tickerDate'] in nwDict:
-                            nwDict[t['tickerDate']] = nwDict[t['tickerDate']] + (t['tickerPrice'] * i['number_of_shares'])
+                            if i['investment_type'] in nwDict[t['tickerDate']]:
+                                nwDict[t['tickerDate']][i['investment_type']] = nwDict[t['tickerDate']][i['investment_type']] + (t['tickerPrice'] * i['number_of_shares'])
+                            else:
+                                nwDict[t['tickerDate']][i['investment_type']] = (t['tickerPrice'] * i['number_of_shares'])
                         else:
-                            nwDict[t['tickerDate']] = (t['tickerPrice'] * i['number_of_shares'])
+                            nwDict[t['tickerDate']] = {}
+                            nwDict[t['tickerDate']][i['investment_type']] = (t['tickerPrice'] * i['number_of_shares'])
             
             for x, y in nwDict.items():
+                consolidatedTypeNetWorth = {}
+                for k, v in y.items():
+                    consolidatedTypeNetWorth.update({k : {"S": str(v)}})
                 dyndb.put_item(
                         TableName='customer_net_worth',
                         Item={
                         'customerID': {'S': customerID},
                         'insertDate' : {'S': x},
-                        'totalAmount' : {'S': str(y)}
+                        'totalAmount' : {"M": consolidatedTypeNetWorth}
                         }
                     )    
+      
       
         # TODO implement
         return {
