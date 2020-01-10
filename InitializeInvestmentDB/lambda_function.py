@@ -13,10 +13,8 @@ print('Loading function')
 
 def lambda_handler(event, context):
     region='us-east-1'
-    recList=[]
     
     try:
-        tickerList = ['aapl', 'goog'];
         dyndb = boto3.client('dynamodb', region_name=region)
         dyndbResource = boto3.resource('dynamodb')
         
