@@ -19,7 +19,7 @@ def lambda_handler(event, context):
     bucket = event['Records'][0]['s3']['bucket']['name']
     key = unquote_plus(event['Records'][0]['s3']['object']['key'], encoding='utf-8')
     
-    region='us-east-1'
+    region='us-east-2'
     recList=[]
     
     try:
@@ -43,8 +43,12 @@ def lambda_handler(event, context):
             purchase_price = row[5]
             number_of_shares = row[6]
             purchase_date = row[7]
+            if row[8] == '':
+                sale_date = 'N/A'
+            else:
+                sale_date = row[8]
             response = dyndb.put_item(
-                TableName='InvestmentPortfolio',
+                TableName='investment_portfolio',
                 Item={
                 'transactionID': {'S': str(uuid.uuid1())},
                 'customerID' : {'S':customerID},
@@ -55,6 +59,7 @@ def lambda_handler(event, context):
                 'purchase_price': {'N':purchase_price},
                 'number_of_shares': {'N':number_of_shares},
                 'purchase_date': {'S':purchase_date},
+                'sale_date': {'S':sale_date},
                 }
             )
         print('Put succeeded:')

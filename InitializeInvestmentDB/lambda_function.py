@@ -12,13 +12,13 @@ from botocore.exceptions import ClientError
 print('Loading function')
 
 def lambda_handler(event, context):
-    region='us-east-1'
+    region='us-east-2'
     
     try:
         dyndb = boto3.client('dynamodb', region_name=region)
         dyndbResource = boto3.resource('dynamodb')
         
-        investmentPortfolioTable = dyndbResource.Table('InvestmentPortfolio')
+        investmentPortfolioTable = dyndbResource.Table('investment_portfolio')
         response = investmentPortfolioTable.scan()
         items = response['Items']
        
@@ -33,10 +33,9 @@ def lambda_handler(event, context):
             resJson = res.json()
             
             for dt in resJson["Time Series (Daily)"]:
-                print(resJson["Time Series (Daily)"][dt]["4. close"]);
-                
+                #print(resJson["Time Series (Daily)"][dt]["4. close"]);
                 response = dyndb.put_item(
-                    TableName='TickerTimeSeries',
+                    TableName='historical_ticker_data',
                     Item={
                     'tickerName': {'S': resJson["Meta Data"]["2. Symbol"]},
                     'tickerPrice' : {'N':resJson["Time Series (Daily)"][dt]["4. close"]},
