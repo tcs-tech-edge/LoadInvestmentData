@@ -6,7 +6,7 @@ import csv
 import sys
 import uuid
 import requests
-
+import time
 from botocore.exceptions import ClientError
 
 print('Loading function')
@@ -26,7 +26,7 @@ def lambda_handler(event, context):
         for i in items:
             if(i["ticker"] not in uniqueTickers):
                  uniqueTickers.append(i["ticker"]);
-       
+        counter = 1
         for item in uniqueTickers:
             print(item)
             res = requests.get('https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol='+item+'&apikey=W03G1YF4WE1KCNQ5')
@@ -42,6 +42,11 @@ def lambda_handler(event, context):
                     'tickerDate' : {'S':dt}
                     }
                 )
+            if counter == 5:
+                counter = 1
+                time.sleep(60)
+            else:
+                counter = counter + 1;    
             print('Put succeeded:')
         # TODO implement
         return {
