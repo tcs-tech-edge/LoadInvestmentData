@@ -8,7 +8,7 @@ exports.handler = async (event, context) => {
   let statusCode = 0;
 
   const params = {
-    TableName: "investment_portfolio"
+    TableName: "historical_ticker_data"
   };
 
   try {
@@ -16,7 +16,7 @@ exports.handler = async (event, context) => {
     responseBody = JSON.stringify(data.Items);
     statusCode = 200;
   } catch(err) {
-    responseBody = `Unable to get investment_portfolio: ${err}`;
+    responseBody = `Unable to get historical_ticker_data: ${err}`;
     statusCode = 403;
   }
 

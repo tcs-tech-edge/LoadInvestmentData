@@ -6,9 +6,14 @@ exports.handler = async (event, context) => {
 
   let responseBody = "";
   let statusCode = 0;
+  
+  const {  tickername } = event.pathParameters;
 
   const params = {
-    TableName: "investment_portfolio"
+    TableName: "historical_ticker_data",
+    Item: {
+      tickerName: tickername
+    }
   };
 
   try {
@@ -16,15 +21,14 @@ exports.handler = async (event, context) => {
     responseBody = JSON.stringify(data.Items);
     statusCode = 200;
   } catch(err) {
-    responseBody = `Unable to get investment_portfolio: ${err}`;
+    responseBody = `Unable to get historical_ticker_data: ${err}`;
     statusCode = 403;
   }
 
   const response = {
     statusCode: statusCode,
     headers: {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*"
+      "Content-Type": "application/json"
     },
     body: responseBody
   };
